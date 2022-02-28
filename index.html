@@ -4,7 +4,99 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>0 guitar assistant</title>
+    <title>g0-school assistant</title>
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="./assets/fonts/roboto-mono-v13-latin_cyrillic-regular.woff"
+      crossorigin
+    />
+
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="./assets/fonts/roboto-mono-v13-latin_cyrillic-regular.woff2"
+      crossorigin
+    />
+
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="./assets/fonts/roboto-mono-v13-latin_cyrillic-italic.woff"
+      crossorigin
+    />
+
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="./assets/fonts/roboto-mono-v13-latin_cyrillic-italic.woff2"
+      crossorigin
+    />
+
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="./assets/fonts/roboto-mono-v13-latin_cyrillic-700.woff"
+      crossorigin
+    />
+
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="./assets/fonts/roboto-mono-v13-latin_cyrillic-700.woff2"
+      crossorigin
+    />
+
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="./assets/fonts/roboto-mono-v13-latin_cyrillic-700italic.woff"
+      crossorigin
+    />
+
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="./assets/fonts/roboto-mono-v13-latin_cyrillic-700italic.woff2"
+      crossorigin
+    />
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/plyr.css" />
   </head>
-  <body></body>
+  <body>
+    <header class="header">
+      <h1 class="title title__header">
+        hello to all students of the g0-school!
+      </h1>
+    </header>
+
+    <main class="main">
+      <div class="plyr-container">
+        <h3 class="title title__video">Спокойная ночь</h3>
+        <div class="plyr__video-embed" id="player">
+          <iframe
+            src="https://www.youtube.com/embed/8oIVBqJBgpE"
+            allowfullscreen
+            allowtransparency
+            allow="autoplay"
+          ></iframe>
+        </div>
+
+        <button class="btn btn__video">Поехали!</button>
+      </div>
+    </main>
+
+    <footer class="footer"></footer>
+    <script src="/js/plyr.js"></script>
+    <script src="/js/0ga.js"></script>
+  </body>
 </html>
