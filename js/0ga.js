@@ -9,17 +9,11 @@ const btn = document.querySelector('.btn__video');
 btn.textContent = 'Как играется';
 
 function goPlay() {
-    // console.log(player);
-    // player.fullscreen.enter(); // Enter fullscreen
 
-    player.currentTime = 254;
+    player.currentTime = 254; // теперь о том как она играется (спокойная ночь)
     player.muted = false;
 
     player.play(); // Start playback
-
-
-
-    // player.forward(253); // теперь о том как она играется (спокойная ночь)
 }
 
 btn.addEventListener('click', goPlay);
