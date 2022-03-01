@@ -1,3 +1,7 @@
+:root {
+  --primary-color: #00b3ff;
+}
+
 /* roboto-mono-regular - latin_cyrillic */
 @font-face {
   font-family: "Roboto Mono";
@@ -47,11 +51,36 @@
       format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
+/* !!! begin */
+
 * {
   box-sizing: border-box;
   font-family: "Roboto Mono", serif;
   font-weight: 400;
   font-size: 16px;
+}
+
+.btn {
+  padding: 5px 10px;
+  font-family: "Roboto Mono", serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 18px;
+  border: none;
+  margin: 10px;
+
+  background-color: var(--primary-color);
+  transition: all 0.3s;
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.btn:hover {
+  cursor: pointer;
+  /* box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.25); */
+  color: #fff;
 }
 
 .title {
@@ -69,6 +98,18 @@
 
 .plyr-container {
   width: 800px;
+  border-radius: 5px;
   height: auto;
   margin: 0 auto;
+  border: 1px solid rgba(34, 60, 80, 0.25);
+  box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.25);
+}
+
+.plyr__video-embed {
+  border-radius: 5px;
+  padding-bottom: 10px;
+}
+
+.ytp-pause-overlay {
+  display: none;
 }

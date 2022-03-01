@@ -5,6 +5,7 @@
 const player = new Plyr(document.getElementById('player'));
 
 const btn = document.querySelector('.btn__video');
+const check = document.querySelector('.check__loop');
 
 btn.textContent = 'Как играется';
 
@@ -19,5 +20,14 @@ function goPlay() {
 btn.addEventListener('click', goPlay);
 
 player.on('timeupdate', (event) => {
-    if (player.currentTime >= 360) player.pause();
+
+    if (check.checked) {
+        if (player.currentTime >= 264) {
+            player.currentTime = 254;
+
+            player.play();
+        }
+    } else {
+        if (player.currentTime >= 264) player.pause();
+    }
 });
