@@ -53,7 +53,6 @@ function goLoad() {
         itemSpan.style.marginLeft = (f.start / player.duration) * 100 + '%';
         itemSpan.style.width = ((f.stop - f.start) / player.duration) * 100 + '%';
         itemDiv.append(itemSpan);
-        // console.log(itemSpan);
     });
 
     // btn.textContent = '> Как играется';
