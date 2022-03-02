@@ -3,9 +3,12 @@
 const player = new Plyr(document.getElementById('player'));
 
 // const player = new Plyr('#player');
-let fragmentsArr = [{ start: 254, stop: 264, desc: 'Вступление' }, { start: 300, stop: 320, desc: 'Куплет 1' }];
-let startTime = 254;
-let endTime = 264;
+let fragmentsArr = [
+    { start: 4.5, stop: 250, desc: 'Исполнение' },
+    { start: 254, stop: 364, desc: 'Вступление' }, 
+    { start: 300, stop: 320, desc: 'Куплет 01' }];
+let startTime = 0;
+let endTime = 1;
 
 // ! local storage
 // function setLocalStorage() {
@@ -33,9 +36,6 @@ let endTime = 264;
 // const player = new Plyr(document.getElementById('player'));
 const fragDiv = document.querySelector('.fragments');
 
-
-// const btn = document.querySelector('.btn__video');
-
 const check = document.querySelector('.check__loop');
 
 function goLoad() {
@@ -55,45 +55,38 @@ function goLoad() {
         itemDiv.append(itemSpan);
     });
 
-    // btn.textContent = '> Как играется';
-    // btn.style.marginLeft = (startTime / player.duration) * 100 + '%';
-    // btn.style.width = ((endTime - startTime) / player.duration) * 100 + '%';
+    const btnF = document.querySelectorAll('.fragment');
+    btnF.forEach((fr, idx) =>
+        fr.addEventListener('click', function (e) {
+            startTime = fragmentsArr[idx].start;
+            endTime = fragmentsArr[idx].stop;
+            goPlay();
+        })
+    );
 }
 
 window.addEventListener('load', goLoad);
 
 
 function goPlay() {
-    player.currentTime = startTime; // теперь о том как она играется (спокойная ночь)
+    player.currentTime = startTime;
     player.muted = false;
-
     player.play(); // Start playback
 }
 
-// btn.addEventListener('click', goPlay);
-
 player.on('timeupdate', (event) => {
 
+    theEnd = endTime;
+
+    if (player.currentTime > (endTime + 5)) theEnd = player.duration;
+
     if (check.checked) {
-        if (player.currentTime >= endTime) {
+        if (player.currentTime >= theEnd) {
             player.currentTime = startTime;
 
             player.play();
         }
     } else {
-        if (player.currentTime >= endTime) player.pause();
+        if (player.currentTime >= theEnd) player.pause();
     }
 });
-
-
-const btnF = document.querySelectorAll('.fragment');
-
-btnF.forEach((fr, idx) =>
-    fr.addEventListener('click', function (e) {
-        // let indexFragment = f.classList.find(item => item.indexOf("fragment-") != -1);
-        console.log(fr, idx);
-
-        // ? .fragment-4 
-
-    })
-);
