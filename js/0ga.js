@@ -80,6 +80,7 @@ const inputStart = document.querySelector('.input__fragment--start');
 const inputStop = document.querySelector('.input__fragment--stop');
 const inputDesc = document.querySelector('.input__description');
 
+
 // const player = new Plyr('#player');
 let fragmentsArr = [
     { start: 4.5, stop: 250, desc: 'Исполнение' },
@@ -110,6 +111,18 @@ let fragmentsArr = [
 // }
 // window.addEventListener('load', getLocalStorage);
 
+function convertMS(ms) {
+    var d, h, m, s;
+    s = ms;
+    m = Math.floor(s / 60);
+    s = s % 60;
+    h = Math.floor(m / 60);
+    m = m % 60;
+    d = Math.floor(h / 24);
+    h = h % 24;
+    h += d * 24;
+    return h + ':' + m + ':' + s;
+}
 
 // !!! 
 // const player = new Plyr(document.getElementById('player'));
@@ -122,7 +135,7 @@ function goLoad() {
     endTime = player.duration;
     theEnd = endTime;
 
-    fragmentsArr.forEach((f, i) => {
+    fragmentsArr.forEach((f) => {
         const itemDiv = document.createElement('div');
         itemDiv.classList.add('btn-container');
         fragDiv.append(itemDiv);
@@ -130,8 +143,8 @@ function goLoad() {
         itemSpan.classList.add('btn');
         itemSpan.classList.add('btn__video');
         itemSpan.classList.add('fragment');
-        itemSpan.classList.add('fragment-' + i);
         itemSpan.textContent = f.desc;
+        itemSpan.title = convertMS(f.start) + ' - ' + convertMS(f.stop);
         itemSpan.style.marginLeft = (f.start / player.duration) * 100 + '%';
         itemSpan.style.width = ((f.stop - f.start) / player.duration) * 100 + '%';
         itemDiv.append(itemSpan);
@@ -198,4 +211,17 @@ btnPlay.addEventListener('click', (e) => {
     goPlay();
 });
 
-
+btnAdd.addEventListener('click', (e) => {
+    const itemDiv = document.createElement('div');
+    itemDiv.classList.add('btn-container');
+    fragDiv.append(itemDiv);
+    const itemSpan = document.createElement('span');
+    itemSpan.classList.add('btn');
+    itemSpan.classList.add('btn__video');
+    itemSpan.classList.add('fragment');
+    itemSpan.textContent = '!!!';
+    itemSpan.title = convertMS(Number(inputStart.value)) + ' - ' + convertMS(Number(inputStop.value));
+    itemSpan.style.marginLeft = (Number(inputStart.value) / player.duration) * 100 + '%';
+    itemSpan.style.width = ((Number(inputStop.value) - Number(inputStart.value)) / player.duration) * 100 + '%';
+    itemDiv.append(itemSpan);
+});
