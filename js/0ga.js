@@ -49,9 +49,36 @@
 
 // Setup the player
 // const playerNew = new Plyr('#player-0', { controls });
+let startTime;
+let endTime;
+let theEnd = 0;
+let insideFragment = true;
+
 const player = new Plyr(document.getElementById('player'), {
-    infertTime: false,
+    invertTime: false,
+    controls: ['play-large', // The large play button in the center
+        'restart',
+        'play', // Play/pause playback
+        'progress', // The progress bar and scrubber for playback and buffering
+        'current-time', // The current time of playback
+        'duration', // The full duration of the media
+        'mute', // Toggle mute
+        'volume', // Volume control
+        'settings', // Settings menu
+        'fullscreen',],
+    keyboard: {
+        global: true,
+    },
 });
+
+// ! добавление фрагмента - управление
+const btnStart = document.querySelector('.btn__start-fragment');
+const btnStop = document.querySelector('.btn__stop-fragment');
+const btnPlay = document.querySelector('.btn__play-fragment');
+const btnAdd = document.querySelector('.btn__add-fragment');
+const inputStart = document.querySelector('.input__fragment--start');
+const inputStop = document.querySelector('.input__fragment--stop');
+const inputDesc = document.querySelector('.input__description');
 
 // const player = new Plyr('#player');
 let fragmentsArr = [
@@ -61,10 +88,6 @@ let fragmentsArr = [
     { start: 265, stop: 346.5, desc: 'разбор' },
     { start: 347, stop: 359.3, desc: '00' },];
 
-let startTime = 0;
-let endTime = 1;
-let theEnd = 0;
-let insideFragment = true;
 
 // ! local storage
 // function setLocalStorage() {
@@ -125,7 +148,8 @@ function goLoad() {
         })
     );
 
-
+    inputStart.value = 0;
+    inputStop.value = player.duration;
 }
 
 window.addEventListener('load', goLoad);
@@ -158,3 +182,20 @@ player.on('timeupdate', (event) => {
         if (player.currentTime >= theEnd) player.pause();
     }
 });
+
+// ! добавление фрагмента - 
+btnStart.addEventListener('click', (e) => inputStart.value = player.currentTime.toFixed(1));
+btnStop.addEventListener('click', (e) => inputStop.value = player.currentTime.toFixed(1));
+
+btnPlay.addEventListener('click', (e) => {
+    let nStart = Number(inputStart.value);
+    let nStop = Number(inputStop.value);
+
+    startTime = nStart;
+    endTime = nStop;
+    theEnd = endTime;
+
+    goPlay();
+});
+
+
