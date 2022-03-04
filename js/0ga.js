@@ -78,7 +78,7 @@ function convertMS(ms) {
     d = Math.floor(h / 24);
     h = h % 24;
     h += d * 24;
-    return h + ':' + m + ':' + s;
+    return h + ' : ' + m + ' : ' + Number(s.toFixed(1));
 }
 
 // !!! 
@@ -107,7 +107,6 @@ function addFragment(fStart, fStop, fDescription) {
     itemSpan.classList.add('btn');
     itemSpan.classList.add('btn__video');
     itemSpan.classList.add('fragment');
-    // itemSpan.textContent = f.desc;
     itemSpan.textContent = fDescription;
     itemSpan.title = convertMS(fStart) + ' - ' + convertMS(fStop);
     itemSpan.style.marginLeft = (fStart / player.duration) * 100 + '%';
@@ -118,7 +117,7 @@ function addFragment(fStart, fStop, fDescription) {
 function playFragment() {
     const btnF = document.querySelectorAll('.fragment');
     btnF.forEach((fr, idx) =>
-        fr.addEventListener('click', function (e) {
+        fr.addEventListener('click', function(e) {
             startTime = fragmentsArr[idx].start;
             endTime = fragmentsArr[idx].stop;
             theEnd = endTime;
@@ -126,6 +125,17 @@ function playFragment() {
             goPlay();
         })
     );
+}
+
+function delFragment() {
+    const btnDel = document.querySelectorAll('.btn__del-fragment');
+    btnDel.forEach((fr, idx) =>
+        fr.addEventListener('click', function(e) {
+            fr.parentElement.remove();
+            fragmentsArr.splice(idx, 1);
+        })
+    );
+    playFragment();
 }
 
 function goLoad() {
@@ -138,6 +148,7 @@ function goLoad() {
     });
 
     playFragment();
+    delFragment();
 
     inputStart.value = 0;
     inputStop.value = player.duration;
@@ -189,7 +200,9 @@ btnPlay.addEventListener('click', (e) => {
     goPlay();
 });
 
+
 btnAdd.addEventListener('click', (e) => {
+
     addFragment(Number(inputStart.value), Number(inputStop.value), inputDesc.value);
 
     fragmentsArr.push({
@@ -199,8 +212,7 @@ btnAdd.addEventListener('click', (e) => {
     });
 
     playFragment();
-
-    // const
+    delFragment();
 });
 
 
