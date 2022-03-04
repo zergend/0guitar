@@ -4,49 +4,6 @@
 // todo: ! если фрагмент щелкнуть 2-й раз, то всё нормально.
 
 //!!
-// const controls = `
-// <div class="plyr__controls">
-//     <button type="button" class="plyr__control" data-plyr="restart">
-//         <svg role="presentation"><use xlink:href="#plyr-restart"></use></svg>
-//         <span class="plyr__tooltip" role="tooltip">Restart</span>
-//     </button>
-//     <button type="button" class="plyr__control" aria-label="Play, {title}" data-plyr="play">
-//         <svg class="icon--pressed" role="presentation"><use xlink:href="#plyr-pause"></use></svg>
-//         <svg class="icon--not-pressed" role="presentation"><use xlink:href="#plyr-play"></use></svg>
-//         <span class="label--pressed plyr__tooltip" role="tooltip">Pause</span>
-//         <span class="label--not-pressed plyr__tooltip" role="tooltip">Play</span>
-//     </button>
-//     <div class="plyr__progress">
-//         <input data-plyr="seek" type="range" min="0" max="100" step="0.01" value="0" aria-label="Seek">
-//         <progress class="plyr__progress__buffer" min="0" max="100" value="0">% buffered</progress>
-//         <span role="tooltip" class="plyr__tooltip">00:00</span>
-//     </div>
-//     <div class="plyr__time plyr__time--current" aria-label="Current time">00:00</div>
-//     <div class="plyr__time plyr__time--duration" aria-label="Duration">00:00</div>
-//     <button type="button" class="plyr__control" aria-label="Mute" data-plyr="mute">
-//         <svg class="icon--pressed" role="presentation"><use xlink:href="#plyr-muted"></use></svg>
-//         <svg class="icon--not-pressed" role="presentation"><use xlink:href="#plyr-volume"></use></svg>
-//         <span class="label--pressed plyr__tooltip" role="tooltip">Unmute</span>
-//         <span class="label--not-pressed plyr__tooltip" role="tooltip">Mute</span>
-//     </button>
-//     <div class="plyr__volume">
-//         <input data-plyr="volume" type="range" min="0" max="1" step="0.05" value="1" autocomplete="off" aria-label="Volume">
-//     </div>
-//     <button type="button" class="plyr__control" data-plyr="captions">
-//         <svg class="icon--pressed" role="presentation"><use xlink:href="#plyr-captions-on"></use></svg>
-//         <svg class="icon--not-pressed" role="presentation"><use xlink:href="#plyr-captions-off"></use></svg>
-//         <span class="label--pressed plyr__tooltip" role="tooltip">Disable captions</span>
-//         <span class="label--not-pressed plyr__tooltip" role="tooltip">Enable captions</span>
-//     </button>
-//     <button type="button" class="plyr__control" data-plyr="fullscreen">
-//         <svg class="icon--pressed" role="presentation"><use xlink:href="#plyr-exit-fullscreen"></use></svg>
-//         <svg class="icon--not-pressed" role="presentation"><use xlink:href="#plyr-enter-fullscreen"></use></svg>
-//         <span class="label--pressed plyr__tooltip" role="tooltip">Exit fullscreen</span>
-//         <span class="label--not-pressed plyr__tooltip" role="tooltip">Enter fullscreen</span>
-//     </button>
-// </div>
-// `;
-
 // Setup the player
 // const playerNew = new Plyr('#player-0', { controls });
 let startTime;
@@ -126,30 +83,39 @@ function convertMS(ms) {
 
 // !!! 
 // const player = new Plyr(document.getElementById('player'));
-const fragDiv = document.querySelector('.fragments');
+const pContainer = document.querySelector('.plyr-container');
+// const fContainer = document.querySelector('.fragment-container');
+// const fragDiv = document.querySelector('.fragments');
 
 const check = document.querySelector('.check__loop');
 
-function goLoad() {
-    startTime = 0;
-    endTime = player.duration;
-    theEnd = endTime;
+function addFragment(fStart, fStop, fDescription) {
+    const fContainer = document.createElement('div');
+    fContainer.classList.add('fragment-container');
+    pContainer.append(fContainer);
+    const fDiv = document.createElement('div');
+    fDiv.classList.add('fragment-wrap');
+    fContainer.append(fDiv);
+    const btnDel = document.createElement('button');
+    btnDel.classList.add('btn');
+    btnDel.classList.add('btn__fragment');
+    btnDel.classList.add('btn__del-fragment');
+    btnDel.textContent = '—';
+    fContainer.append(btnDel);
 
-    fragmentsArr.forEach((f) => {
-        const itemDiv = document.createElement('div');
-        itemDiv.classList.add('btn-container');
-        fragDiv.append(itemDiv);
-        const itemSpan = document.createElement('span');
-        itemSpan.classList.add('btn');
-        itemSpan.classList.add('btn__video');
-        itemSpan.classList.add('fragment');
-        itemSpan.textContent = f.desc;
-        itemSpan.title = convertMS(f.start) + ' - ' + convertMS(f.stop);
-        itemSpan.style.marginLeft = (f.start / player.duration) * 100 + '%';
-        itemSpan.style.width = ((f.stop - f.start) / player.duration) * 100 + '%';
-        itemDiv.append(itemSpan);
-    });
+    const itemSpan = document.createElement('span');
+    itemSpan.classList.add('btn');
+    itemSpan.classList.add('btn__video');
+    itemSpan.classList.add('fragment');
+    // itemSpan.textContent = f.desc;
+    itemSpan.textContent = fDescription;
+    itemSpan.title = convertMS(fStart) + ' - ' + convertMS(fStop);
+    itemSpan.style.marginLeft = (fStart / player.duration) * 100 + '%';
+    itemSpan.style.width = ((fStop - fStart) / player.duration) * 100 + '%';
+    fDiv.append(itemSpan);
+}
 
+function playFragment() {
     const btnF = document.querySelectorAll('.fragment');
     btnF.forEach((fr, idx) =>
         fr.addEventListener('click', function (e) {
@@ -160,6 +126,18 @@ function goLoad() {
             goPlay();
         })
     );
+}
+
+function goLoad() {
+    startTime = 0;
+    endTime = player.duration;
+    theEnd = endTime;
+
+    fragmentsArr.forEach((f) => {
+        addFragment(f.start, f.stop, f.desc);
+    });
+
+    playFragment();
 
     inputStart.value = 0;
     inputStop.value = player.duration;
@@ -212,16 +190,17 @@ btnPlay.addEventListener('click', (e) => {
 });
 
 btnAdd.addEventListener('click', (e) => {
-    const itemDiv = document.createElement('div');
-    itemDiv.classList.add('btn-container');
-    fragDiv.append(itemDiv);
-    const itemSpan = document.createElement('span');
-    itemSpan.classList.add('btn');
-    itemSpan.classList.add('btn__video');
-    itemSpan.classList.add('fragment');
-    itemSpan.textContent = '!!!';
-    itemSpan.title = convertMS(Number(inputStart.value)) + ' - ' + convertMS(Number(inputStop.value));
-    itemSpan.style.marginLeft = (Number(inputStart.value) / player.duration) * 100 + '%';
-    itemSpan.style.width = ((Number(inputStop.value) - Number(inputStart.value)) / player.duration) * 100 + '%';
-    itemDiv.append(itemSpan);
+    addFragment(Number(inputStart.value), Number(inputStop.value), inputDesc.value);
+
+    fragmentsArr.push({
+        start: Number(inputStart.value),
+        stop: Number(inputStop.value),
+        desc: inputDesc.value,
+    });
+
+    playFragment();
+
+    // const
 });
+
+
