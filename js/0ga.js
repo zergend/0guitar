@@ -83,16 +83,18 @@ function convertMS(ms) {
 
 // !!! 
 // const player = new Plyr(document.getElementById('player'));
-const pContainer = document.querySelector('.plyr-container');
+// const pContainer = document.querySelector('.plyr-container');
+// const fControls = document.querySelector('.fragments-control');
 // const fContainer = document.querySelector('.fragment-container');
 // const fragDiv = document.querySelector('.fragments');
 
 const check = document.querySelector('.check__loop');
 
 function addFragment(fStart, fStop, fDescription) {
+    const fControls = document.querySelector('.fragments-control');
     const fContainer = document.createElement('div');
     fContainer.classList.add('fragment-container');
-    pContainer.append(fContainer);
+    fControls.append(fContainer);
     const fDiv = document.createElement('div');
     fDiv.classList.add('fragment-wrap');
     fContainer.append(fDiv);
@@ -107,7 +109,7 @@ function addFragment(fStart, fStop, fDescription) {
     itemSpan.classList.add('btn');
     itemSpan.classList.add('btn__video');
     itemSpan.classList.add('fragment');
-    itemSpan.textContent = fDescription;
+    itemSpan.textContent = (fDescription.trim() == '') ? '???' : fDescription;
     itemSpan.title = convertMS(fStart) + ' - ' + convertMS(fStop);
     itemSpan.style.marginLeft = (fStart / player.duration) * 100 + '%';
     itemSpan.style.width = ((fStop - fStart) / player.duration) * 100 + '%';
@@ -117,7 +119,7 @@ function addFragment(fStart, fStop, fDescription) {
 function playFragment() {
     const btnF = document.querySelectorAll('.fragment');
     btnF.forEach((fr, idx) =>
-        fr.addEventListener('click', function(e) {
+        fr.addEventListener('click', function (e) {
             startTime = fragmentsArr[idx].start;
             endTime = fragmentsArr[idx].stop;
             theEnd = endTime;
@@ -129,9 +131,11 @@ function playFragment() {
 
 function delFragment() {
     const btnDel = document.querySelectorAll('.btn__del-fragment');
+    const fCon = document.querySelectorAll('.fragment-container');
+
     btnDel.forEach((fr, idx) =>
-        fr.addEventListener('click', function(e) {
-            fr.parentElement.remove();
+        fr.addEventListener('click', function (e) {
+            fCon[idx].remove();
             fragmentsArr.splice(idx, 1);
         })
     );
