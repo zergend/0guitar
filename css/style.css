@@ -25,7 +25,7 @@ span.btn {
   padding: 5px;
   border: none;
   margin: 0;
-  overflow: visible;
+  overflow: hidden;
   background-color: var(--primary-color);
   transition: all 0.3s;
 }
@@ -83,15 +83,16 @@ span.btn {
   padding-right: 10px;
 }
 
-.btn__play-fragment {
+.btn__play-setup-fragment {
   margin-right: 10px;
 }
-.btn__add-fragment {
+.btn__add-setup-fragment {
   margin-left: 10px;
 }
 
 .fragment-container {
   display: flex;
+  height: 38px;
 }
 
 .fragment-wrap {
@@ -102,5 +103,10 @@ span.btn {
 
 .btn__del-fragment {
   margin-left: auto;
+  margin-bottom: 10px;
+}
+
+.btn__play-fragment {
+  margin-right: 0;
   margin-bottom: 10px;
 }

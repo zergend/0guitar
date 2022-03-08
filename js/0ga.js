@@ -29,10 +29,10 @@ const player = new Plyr(document.getElementById('player'), {
 });
 
 // ! добавление фрагмента - управление
-const btnStart = document.querySelector('.btn__start-fragment');
-const btnStop = document.querySelector('.btn__stop-fragment');
-const btnPlay = document.querySelector('.btn__play-fragment');
-const btnAdd = document.querySelector('.btn__add-fragment');
+const btnStart = document.querySelector('.btn__start-setup-fragment');
+const btnStop = document.querySelector('.btn__stop-setup-fragment');
+const btnPlay = document.querySelector('.btn__play-setup-fragment');
+const btnAdd = document.querySelector('.btn__add-setup-fragment');
 const inputStart = document.querySelector('.input__fragment--start');
 const inputStop = document.querySelector('.input__fragment--stop');
 const inputDesc = document.querySelector('.input__description');
@@ -44,7 +44,15 @@ let fragmentsArr = [
     { start: 254, stop: 359.5, desc: 'Вступление' },
     { start: 256, stop: 265, desc: '00' },
     { start: 265, stop: 346.5, desc: 'разбор' },
-    { start: 347, stop: 359.3, desc: '00' },];
+    { start: 347, stop: 359.3, desc: '00' },
+    { start: 360, stop: 441, desc: '1 куплет' },
+    { start: 394, stop: 406.5, desc: '01' },
+    { start: 418, stop: 442, desc: '02' },
+    { start: 442.6, stop: 511.4, desc: 'припев' },
+    { start: 511.5, stop: 594.8, desc: 'проигрыш?' },
+    { start: 591, stop: 665, desc: '2 куплет' },
+    { start: 684.5, stop: 777, desc: 'последний припев' },
+    { start: 777.5, stop: 862, desc: 'соло (конец)' },];
 
 
 // ! local storage
@@ -95,6 +103,12 @@ function addFragment(fStart, fStop, fDescription) {
     const fContainer = document.createElement('div');
     fContainer.classList.add('fragment-container');
     fControls.append(fContainer);
+    const btnPlayFragment = document.createElement('button');
+    btnPlayFragment.classList.add('btn');
+    btnPlayFragment.classList.add('btn__fragment');
+    btnPlayFragment.classList.add('btn__play-fragment');
+    btnPlayFragment.textContent = '▶';
+    fContainer.append(btnPlayFragment);
     const fDiv = document.createElement('div');
     fDiv.classList.add('fragment-wrap');
     fContainer.append(fDiv);
@@ -102,7 +116,7 @@ function addFragment(fStart, fStop, fDescription) {
     btnDel.classList.add('btn');
     btnDel.classList.add('btn__fragment');
     btnDel.classList.add('btn__del-fragment');
-    btnDel.textContent = '—';
+    btnDel.textContent = '▬';
     fContainer.append(btnDel);
 
     const itemSpan = document.createElement('span');
@@ -110,7 +124,7 @@ function addFragment(fStart, fStop, fDescription) {
     itemSpan.classList.add('btn__video');
     itemSpan.classList.add('fragment');
     itemSpan.textContent = (fDescription.trim() == '') ? '???' : fDescription;
-    itemSpan.title = convertMS(fStart) + ' - ' + convertMS(fStop);
+    itemSpan.title = itemSpan.textContent + ': ' + convertMS(fStart) + ' - ' + convertMS(fStop);
     itemSpan.style.marginLeft = (fStart / player.duration) * 100 + '%';
     itemSpan.style.width = ((fStop - fStart) / player.duration) * 100 + '%';
     fDiv.append(itemSpan);
@@ -118,13 +132,32 @@ function addFragment(fStart, fStop, fDescription) {
 
 function playFragment() {
     const btnF = document.querySelectorAll('.fragment');
+    const btnP = document.querySelectorAll('.btn__play-fragment');
+    const fCont = document.querySelectorAll('.fragment-container');
+    let startFromClick;
+
+    btnP.forEach((fr, idx) =>
+        fr.addEventListener('click', function(e) {
+            startTime = fragmentsArr[idx].start;
+            endTime = fragmentsArr[idx].stop;
+            
+            theEnd = endTime;
+            insideFragment = true;
+
+            goPlay();
+        })
+    );
+
     btnF.forEach((fr, idx) =>
         fr.addEventListener('click', function (e) {
             startTime = fragmentsArr[idx].start;
             endTime = fragmentsArr[idx].stop;
+            
             theEnd = endTime;
             insideFragment = true;
-            goPlay();
+
+            startFromClick = player.duration * (startTime / player.duration + e.offsetX / fCont[idx].clientWidth);
+            goPlay(startFromClick);
         })
     );
 }
@@ -137,9 +170,10 @@ function delFragment() {
         fr.addEventListener('click', function (e) {
             fCon[idx].remove();
             fragmentsArr.splice(idx, 1);
+            playFragment();
         })
     );
-    playFragment();
+    
 }
 
 function goLoad() {
@@ -161,23 +195,17 @@ function goLoad() {
 window.addEventListener('load', goLoad);
 
 
-function goPlay() {
-    player.currentTime = startTime;
-    // theEnd = endTime;
+function goPlay(start = 0) {
     player.muted = false;
+    player.currentTime = startTime;
+    if (start > 0) player.currentTime = start;
+    
+    // theEnd = endTime;
+    
     player.play(); // Start playback
 }
 
 player.on('timeupdate', (event) => {
-
-    // if ((player.currentTime < (startTime - 2)) || (player.currentTime > (endTime + 2))) insideFragment = false;
-
-    // // if ((theEnd > startTime) && (theEnd < endTime)) theEnd = endTime;
-    // // if (player.currentTime > (endTime + 5) || player.currentTime < startTime) theEnd = player.duration;
-
-    // if (!insideFragment) theEnd = player.duration;
-    // if (insideFragment) theEnd = endTime;
-
     if (check.checked) {
         if (player.currentTime >= theEnd) {
             player.currentTime = startTime;
