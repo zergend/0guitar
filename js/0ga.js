@@ -1,4 +1,5 @@
 // import Plyr from './plyr.js';
+// !!! todo: нет звука при начале воспроизведения!!!
 // todo: ! если после выбора фрагмента и начала воспроизведения щёлкаем вне его
 // todo: ! а потом опять выбираем фрагмент, по завершении фрагмента не ставится пауза
 // todo: ! если фрагмент щелкнуть 2-й раз, то всё нормально.
@@ -10,6 +11,7 @@ let startTime;
 let endTime;
 let theEnd = 0;
 let insideFragment = true;
+let currentFragment;
 
 const player = new Plyr(document.getElementById('player'), {
     invertTime: false,
@@ -96,9 +98,7 @@ function convertMS(ms) {
 // const fContainer = document.querySelector('.fragment-container');
 // const fragDiv = document.querySelector('.fragments');
 
-const check = document.querySelector('.check__loop');
-
-function addFragment(fStart, fStop, fDescription) {
+function addFragment(fStart, fStop, fDescription, index = -1) {
     const fControls = document.querySelector('.fragments-control');
     const fContainer = document.createElement('div');
     fContainer.classList.add('fragment-container');
@@ -112,6 +112,10 @@ function addFragment(fStart, fStop, fDescription) {
     const fDiv = document.createElement('div');
     fDiv.classList.add('fragment-wrap');
     fContainer.append(fDiv);
+    const curFr = document.createElement('span');
+    curFr.classList.add('current-fragment');  // current position
+    curFr.classList.add('current-fragment-' + index);
+    fDiv.append(curFr);
     const btnDel = document.createElement('button');
     btnDel.classList.add('btn');
     btnDel.classList.add('btn__fragment');
@@ -137,10 +141,11 @@ function playFragment() {
     let startFromClick;
 
     btnP.forEach((fr, idx) =>
-        fr.addEventListener('click', function(e) {
+        fr.addEventListener('click', function (e) {
             startTime = fragmentsArr[idx].start;
             endTime = fragmentsArr[idx].stop;
-            
+            currentFragment = idx;
+
             theEnd = endTime;
             insideFragment = true;
 
@@ -152,7 +157,8 @@ function playFragment() {
         fr.addEventListener('click', function (e) {
             startTime = fragmentsArr[idx].start;
             endTime = fragmentsArr[idx].stop;
-            
+            currentFragment = idx;
+
             theEnd = endTime;
             insideFragment = true;
 
@@ -173,7 +179,7 @@ function delFragment() {
             playFragment();
         })
     );
-    
+
 }
 
 function goLoad() {
@@ -181,8 +187,8 @@ function goLoad() {
     endTime = player.duration;
     theEnd = endTime;
 
-    fragmentsArr.forEach((f) => {
-        addFragment(f.start, f.stop, f.desc);
+    fragmentsArr.forEach((f, i) => {
+        addFragment(f.start, f.stop, f.desc, i);
     });
 
     playFragment();
@@ -199,13 +205,21 @@ function goPlay(start = 0) {
     player.muted = false;
     player.currentTime = startTime;
     if (start > 0) player.currentTime = start;
-    
+
     // theEnd = endTime;
-    
+
     player.play(); // Start playback
 }
 
+const check = document.querySelector('.check__loop');
 player.on('timeupdate', (event) => {
+    const curFrS = document.querySelectorAll('.current-fragment');
+    curFrS.forEach((f) => f.classList.remove('current-visible'));
+
+    const curFragment = document.querySelector('.current-fragment-' + currentFragment);
+    curFragment.classList.add('current-visible');
+    curFragment.style.left = (player.currentTime / player.duration) * 100 + '%';
+
     if (check.checked) {
         if (player.currentTime >= theEnd) {
             player.currentTime = startTime;
@@ -235,7 +249,7 @@ btnPlay.addEventListener('click', (e) => {
 
 btnAdd.addEventListener('click', (e) => {
 
-    addFragment(Number(inputStart.value), Number(inputStop.value), inputDesc.value);
+    addFragment(Number(inputStart.value), Number(inputStop.value), inputDesc.value, fragmentsArr.length);
 
     fragmentsArr.push({
         start: Number(inputStart.value),

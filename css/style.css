@@ -96,9 +96,24 @@ span.btn {
 }
 
 .fragment-wrap {
+  position: relative;
   width: 100%;
   margin-bottom: 10px;
   background-color: coral;
+}
+
+.current-fragment {
+  visibility: hidden;
+  position: absolute;
+  width: 1px;
+  height: 38px;
+  top: 0;
+  left: 0;
+  background: #fff;
+  transition: all 0.1s;
+}
+.current-fragment.current-visible {
+  visibility: visible;
 }
 
 .btn__del-fragment {
