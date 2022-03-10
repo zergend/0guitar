@@ -105,7 +105,7 @@ span.btn {
 .current-fragment {
   visibility: hidden;
   position: absolute;
-  width: 1px;
+  width: 2px;
   height: 38px;
   top: 0;
   left: 0;

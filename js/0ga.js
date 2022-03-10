@@ -15,6 +15,7 @@ let currentFragment;
 
 const player = new Plyr(document.getElementById('player'), {
     invertTime: false,
+    muted: false,
     controls: ['play-large', // The large play button in the center
         'restart',
         'play', // Play/pause playback
@@ -182,6 +183,7 @@ function delFragment() {
 
 }
 
+// let noMute = false;
 function goLoad() {
     startTime = 0;
     endTime = player.duration;
@@ -194,9 +196,15 @@ function goLoad() {
     playFragment();
     delFragment();
 
+    // noMute = true;
+    // player.muted = false;
+    // player.play();  // ? боремся с отсутствием звука
+    // if (player.currentTime > 0.05) player.pause(); // ? при первоначальном воспроизведении ?
+
     inputStart.value = 0;
     inputStop.value = player.duration;
 }
+
 
 window.addEventListener('load', goLoad);
 
@@ -213,12 +221,18 @@ function goPlay(start = 0) {
 
 const check = document.querySelector('.check__loop');
 player.on('timeupdate', (event) => {
+    // if (noMute) {
+    //     player.pause();
+    //     noMute = false;
+    //     return;
+    // }
+    
     const curFrS = document.querySelectorAll('.current-fragment');
     curFrS.forEach((f) => f.classList.remove('current-visible'));
 
     const curFragment = document.querySelector('.current-fragment-' + currentFragment);
     curFragment.classList.add('current-visible');
-    curFragment.style.left = (player.currentTime / player.duration) * 100 + '%';
+    curFragment.style.left = 'calc(' + (player.currentTime / player.duration) * 100 + '% - 1px)';
 
     if (check.checked) {
         if (player.currentTime >= theEnd) {
