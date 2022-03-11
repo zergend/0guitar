@@ -221,12 +221,7 @@ function goPlay(start = 0) {
 
 const check = document.querySelector('.check__loop');
 player.on('timeupdate', (event) => {
-    // if (noMute) {
-    //     player.pause();
-    //     noMute = false;
-    //     return;
-    // }
-    
+
     const curFrS = document.querySelectorAll('.current-fragment');
     curFrS.forEach((f) => f.classList.remove('current-visible'));
 
